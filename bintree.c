@@ -1,3 +1,4 @@
+// vim: fdm=marker
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -35,6 +36,7 @@ static void dot_shutdown() {
 }
 
 static BinTreeNode *bintree_add(BinTreeNode *root, int val) {
+    printf("bintree_add: val %d\n", val);
     BinTreeNode *cur = root, *new = calloc(1, sizeof(*new));
     assert(new);
     new->val = val;
@@ -44,18 +46,25 @@ static BinTreeNode *bintree_add(BinTreeNode *root, int val) {
 
     while (true) {
         if (val >= cur->val) {
+            printf("bintree_add: val >= cur->val\n");
             if (!cur->right) {
+                printf("bintree_add: !cur->right\n");
                 cur->right = new;
                 return root;
             } else {
+                printf("bintree_add: !cur->right else\n");
                 cur = cur->right;
             }
         } else {
+            printf("bintree_add: val < cur->val\n");
             if (!cur->left) {
+                printf("bintree_add: !cur->left\n");
                 cur->left = new;
                 return root;
-            } else
+            } else {
+                printf("bintree_add: !cur->left else\n");
                 cur = cur->left;
+            }
         }
     }
 
@@ -70,7 +79,7 @@ static void bintree_free(BinTreeNode *node) {
         bintree_free(node->left);
     }
     if (node->right) {
-        bintree_free(node->left);
+        bintree_free(node->right);
     }
 
     free(node);
@@ -95,7 +104,7 @@ static void test_1() {
     BinTreeNode *root = NULL;
     dot_init("test_1.dot");
     for (int i = 0; i < 10; i++) {
-        root = bintree_add(root, 1);
+        root = bintree_add(root, i);
     }
     bintree_walk(root);
     bintree_free(root);
